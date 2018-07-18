@@ -1,4 +1,5 @@
 from numpy import *
+import os,sys
 import operator
 import numpy as np
 np.set_printoptions(threshold=np.inf) # 全部显示
@@ -128,13 +129,40 @@ def img2Vector(filename):
 	# returnVect = zeros((1,1024))
 	# print(returnVect)
 	returnVect = zeros([1,1024]) # 创建一维数组个数1024
-	print(returnVect)
 	fr = open(filename)
 	for i in range(32):
 		lineStr = fr.readline()  # 读出每一行数据
-		print(lineStr)
 		for j in range(32):
 			returnVect[0,32*i+j] = int(lineStr[j])
 	return returnVect
 
 
+# 手写数字识别系统测试代码
+def handwritingClassTest():
+	hwLabels = []                     # 保存所有对应的数字
+	trainingFileList = os.listdir('digits/trainingDigits')    # 读取文件夹下的所有文件名称
+	m = len(trainingFileList)         # 文件个数
+	trainingMat = zeros((m,1024))     # 用于保存数字文件内容
+	for i in range(m):                 # 循环遍历所有文件
+		fileNameStr = trainingFileList[i]          # 按顺序获取文件名全称
+		fileStr = fileNameStr.split('.')[0]        # 不包括扩展名的文件名
+		classNumStr = int(fileStr.split('_')[0])   # 获取数字
+		hwLabels.append(classNumStr)               # 数字数组
+		trainingMat[i,:] = img2Vector('digits/trainingDigits/%s' % fileNameStr) # 数字内容
+
+	errorCount = 0.0                       #错误率
+	testFileList = os.listdir('digits/testDigits')   # 测试文件夹下的所有文件名称
+	mTest = len(testFileList)              # 测试文件数量
+	for i in range(mTest):
+		fileNameStr = testFileList[i]
+		fileStr = fileNameStr.split('.')[0]
+		classNumStr = fileNameStr.split('_')[0]
+		vectorUnderTest = img2Vector('digits/testDigits/%s' % fileNameStr)
+		classifierResult = classify0(vectorUnderTest,trainingMat,hwLabels,3)
+		#print("the classifier came back with : %d,the real answer is : %s"
+		#	%(classifierResult,classNumStr))
+		if(classifierResult!=int(classNumStr)):
+			errorCount += 1.0
+			print(str(fileNameStr) + ":" + str(classifierResult))
+	print ("\nthe total number of errors is : %d" % errorCount)
+	print ("\nthe total error rate is %f"  % (errorCount/float(mTest)))
