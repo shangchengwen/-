@@ -27,8 +27,22 @@ for x in range(0,1000,5):
 
 plt.show()
 '''
+'''
+print(input())
+print("----")
+print(input())
+print("----")
+'''
 
-print(input())
-print("----")
-print(input())
-print("----")
+import numpy as np  
+import math  
+import matplotlib.pyplot as plt  
+x=np.arange(0.05,1,0.01)  
+y1=[math.log(a,1.5)for a in x]  
+y2=[-math.log(a,2)for a in x]  
+y3=[math.log(a,3)for a in x]  
+plot1=plt.plot(x,y1,'-g',label="log1.5(x)")  
+plot2=plt.plot(x,y2,'-r',label="-log2(x)")  
+plot3=plt.plot(x,y3,'-b',label="log3(x)")  
+plt.legend(loc='lower right')  
+plt.show()  
