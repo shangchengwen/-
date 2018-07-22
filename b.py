@@ -40,7 +40,28 @@ normMat,ranges,minVals = kNN.autoNorm(datingDataMat)
 kNN.classifyPerson()
 '''
 
-testVector = kNN.img2Vector('digits/testDigits/0_13.txt')
+'''
+testVector = kNN.img2Vector('digits/testDigitsnumFeatures/0_13.txt')
 print("--------")
 print(testVector[0,0:31])
 print(testVector[0,32:63])
+'''
+
+
+import trees
+myDat,labels = trees.createDataSet()
+print(myDat)
+
+'''
+myDat[0][-1] = 'maybe'
+value = trees.calcShannonEnt(myDat)
+print(value)
+
+a = trees.splitDataSet(myDat,0,1)
+print(a)
+b = trees.splitDataSet(myDat,0,0)
+print(b)
+'''
+
+a = trees.chooseBestFeatureToSplit(myDat)
+print(a)
