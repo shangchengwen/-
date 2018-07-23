@@ -63,5 +63,10 @@ b = trees.splitDataSet(myDat,0,0)
 print(b)
 '''
 
+'''
 a = trees.chooseBestFeatureToSplit(myDat)
 print(a)
+'''
+
+myTree = trees.createTree(myDat,labels)
+print(myTree)
