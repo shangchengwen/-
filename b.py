@@ -51,6 +51,7 @@ print(testVector[0,32:63])
 import trees
 myDat,labels = trees.createDataSet()
 print(myDat)
+print(labels)
 
 '''
 myDat[0][-1] = 'maybe'
@@ -70,3 +71,5 @@ print(a)
 
 myTree = trees.createTree(myDat,labels)
 print(myTree)
+
+

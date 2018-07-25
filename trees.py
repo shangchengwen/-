@@ -20,12 +20,40 @@ def calcShannonEnt(dataSet):
 	return shannonEnt
 
 def createDataSet():
+	# 不浮出水面是否可以生存 是否有脚蹼
+	'''
 	dataSet = [[1,1,'yes'],
 	[1,1,'yes'],
 	[1,0,'no'],
 	[0,1,'no'],
 	[0,1,'no']]
 	labels = ['no surfacing','flippers']
+	'''
+
+	'''
+	dataSet = [
+	[1,1,1,'yes'],
+	[2,1,1,'yes'],
+	[2,1,0,'no'],
+	[2,0,1,'may'],
+	[0,0,1,'no'],
+	[1,1,1,'yes'],
+	[2,1,1,'yes'],
+	[2,1,0,'no'],
+	[0,0,1,'no'],
+	[2,0,1,'may']
+	]
+
+	labels = ['sleep','no surfacing','flippers']
+	'''
+
+	dataSet = [
+	[1,1,1,'yes'],
+	[1,1,1,'yes'],
+	[1,1,1,'no']
+	]
+
+	labels = ['sleep','no surfacing','flippers']
 	return dataSet,labels
 
 # 按照给定特征划分数据集
@@ -76,7 +104,7 @@ def chooseBestFeatureToSplit(dataSet):
 		# print("-------------")
 	return bestFeature
 
-# 返回出现次数做多的分类名称
+# 返回出现次数多的分类名称
 def majorityCnt(ClassList):
 	classCount = {}
 	for vote in classList:
@@ -86,19 +114,46 @@ def majorityCnt(ClassList):
 		key = operator.itemgetter(1), reverse = True)
 	return sortedClassCount[0][0]
 
+
 def createTree(dataSet,labels):
+	print("0-----------")
+	print(dataSet[0])
+	print(len(dataSet[0]))
 	classList = [example[-1] for example in dataSet]  # 所有类别的数组
+	print("1-----------")
+	print(classList)
+	print("1-----------")
+	# 与该数组第一个元素相同的元素数量==数组的长度（即所有的元素都一样）
 	if classList.count(classList[0]) == len(classList):
+		print("<<<<<<<<")
+		print("classList[0]"+classList[0])
 		return classList[0]
+	# 数据只有一个了 
 	if len(dataSet[0]) == 1:
+		print(">>>>>>>>")
+		print("classList"+classList)
 		return majorityCnt(ClassList)
-	bestFeat = chooseBestFeatureToSplit(dataSet)
-	bestFeatLabel = labels[bestFeat]
+
+	bestFeat = chooseBestFeatureToSplit(dataSet)  # 选择最好的分类特性 返回特性下标 例第三个特性最好 返回2
+	bestFeatLabel = labels[bestFeat]              # 对应最好特性的 标记对应的名称
 	myTree = {bestFeatLabel:{}}
-	del(labels[bestFeat])
-	featValues = [example[bestFeat] for example in dataSet]
-	uniqueVals = set(featValues)
+	del(labels[bestFeat])                         # 这个特性已经用过 可以删除
+
+	featValues = [example[bestFeat] for example in dataSet]  # 取出 最好特征下标 的所有数据
+	print("2-----------")
+	print(featValues)
+	print("2-----------")
+	uniqueVals = set(featValues)    #  特征包含的值有哪几种
+	print("3-----------")
+	print(uniqueVals)
+	print("3-----------")
 	for value in uniqueVals:
 		subLabels = labels[:]
+		print("----减过以后的标记-------")
+		print(subLabels)
+		print("----减过以后的标记-------")
 		myTree[bestFeatLabel][value] = createTree(splitDataSet(dataSet,bestFeat,value),subLabels)
+		print("----子树-------")
+		print(myTree[bestFeatLabel][value])
+		print("----子树-------")
 	return myTree
