@@ -21,51 +21,29 @@ def calcShannonEnt(dataSet):
 
 def createDataSet():
 	# 不浮出水面是否可以生存 是否有脚蹼
-	'''
 	dataSet = [[1,1,'yes'],
 	[1,1,'yes'],
 	[1,0,'no'],
 	[0,1,'no'],
 	[0,1,'no']]
 	labels = ['no surfacing','flippers']
-	'''
-
-	'''
-	dataSet = [
-	[1,1,1,'yes'],
-	[2,1,1,'yes'],
-	[2,1,0,'no'],
-	[2,0,1,'may'],
-	[0,0,1,'no'],
-	[1,1,1,'yes'],
-	[2,1,1,'yes'],
-	[2,1,0,'no'],
-	[0,0,1,'no'],
-	[2,0,1,'may']
-	]
-
-	labels = ['sleep','no surfacing','flippers']
-	'''
-
-	dataSet = [
-	[1,1,1,'yes'],
-	[1,1,1,'yes'],
-	[1,1,1,'no']
-	]
-
-	labels = ['sleep','no surfacing','flippers']
 	return dataSet,labels
 
 # 按照给定特征划分数据集
 # 三个输入参数：待划分的数据集 划分数据集的特征 需要返回的特征的值
 # 数据集，第几列，值为value，  的数据集
 def splitDataSet(dataSet,axis,value):
-	retDataSet = []
+	if(axis < 0 or axis > len(dataSet)):
+		print("方法 splitDataSet 输入参数有问题")
+	retDataSet = []          # 返回的数据集
 	for featVec in dataSet:
-		if featVec[axis] == value:
-			reducedFeatVec = featVec[:axis]
-			reducedFeatVec.extend(featVec[axis+1:])
-			retDataSet.append(reducedFeatVec)
+		if featVec[axis] == value:           #特征项的值与value相等
+			# featVec = [1,2,3,4,5]
+			# reducedFeatVec = featVec[:2]   取[1,2]
+			# reducedFeatVec = featVec[2:]   取[3,4,5]
+			reducedFeatVec = featVec[:axis]  # 切片操作
+			reducedFeatVec.extend(featVec[axis+1:])    # extend 是元素连接
+			retDataSet.append(reducedFeatVec)          # append 是对象连接
 	return retDataSet
 
 #选择最好的数据集划分方式
@@ -133,12 +111,10 @@ def createTree(dataSet,labels):
 		print(">>>>>>>>")
 		print("classList"+classList)
 		return majorityCnt(ClassList)
-
 	bestFeat = chooseBestFeatureToSplit(dataSet)  # 选择最好的分类特性 返回特性下标 例第三个特性最好 返回2
 	bestFeatLabel = labels[bestFeat]              # 对应最好特性的 标记对应的名称
 	myTree = {bestFeatLabel:{}}
 	del(labels[bestFeat])                         # 这个特性已经用过 可以删除
-
 	featValues = [example[bestFeat] for example in dataSet]  # 取出 最好特征下标 的所有数据
 	print("2-----------")
 	print(featValues)
